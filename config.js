@@ -30,11 +30,12 @@ class EnterpriseConfigurationManager {
              * Configure your Lavalink server for audio processing
              */
             lavalink: {
-                host: EnvironmentVariableProcessor.LAVALINK_HOST || "pnode1.danbot.host", 
-                port: EnvironmentVariableProcessor.LAVALINK_PORT || 1186,       
-                password: EnvironmentVariableProcessor.LAVALINK_PASSWORD || "Kaun.Yuvraj", 
-                secure: EnvironmentVariableProcessor.LAVALINK_SECURE || 'false'
-            },           
+  "identifier": "Harmonix V4 Public",
+  "password": "Kaun.Yuvraj",
+  "host": "pnode1.danbot.host",
+  "port": 1186,
+  "secure": false
+},           
             
             /**
              * 🤖 BOT BEHAVIOR CONFIGURATION
@@ -101,6 +102,7 @@ module.exports = primaryApplicationConfiguration;
  * Never share your bot token or database URI publicly!
  * Use environment variables in production!
  */
+
 
 
 

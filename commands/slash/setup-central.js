@@ -2,21 +2,20 @@ const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, ChannelType } = 
 const Server = require('../../models/Server');
 const CentralEmbedHandler = require('../../utils/centralEmbed');
 const shiva = require('../../shiva');
-
 const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('setup-central')
-        .setDescription('Setup the central music system in current channel')
+        .setDescription('Podesi centralni muzički sistem u trenutnom kanalu')
         .addChannelOption(option =>
             option.setName('voice-channel')
-                .setDescription('Voice channel for music (optional)')
+                .setDescription('Glasovni kanal za muziku (opciono)')
                 .addChannelTypes(ChannelType.GuildVoice)
                 .setRequired(false))
         .addRoleOption(option =>
             option.setName('allowed-role')
-                .setDescription('Role allowed to use central system (optional)')
+                .setDescription('Rola kojoj je dozvoljeno korišćenje centralnog sistema (opciono)')
                 .setRequired(false))
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels),
     securityToken: COMMAND_SECURITY_TOKEN,
@@ -24,7 +23,7 @@ module.exports = {
     async execute(interaction, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return interaction.reply({ embeds: [embed], ephemeral: true }).catch(() => {});
         }
@@ -44,7 +43,7 @@ module.exports = {
             
             if (serverConfig?.centralSetup?.enabled) {
                 return interaction.editReply({
-                    content: '❌ Central music system is already setup! Use `/disable-central` first to reset.',
+                    content: '❌ Centralni muzički sistem je već podešen! Koristite `/disable-central` prvo da resetujete.',
                     ephemeral: true
                 });
             }
@@ -54,7 +53,7 @@ module.exports = {
             
             if (!channel.permissionsFor(botMember).has(['SendMessages', 'EmbedLinks', 'ManageMessages'])) {
                 return interaction.editReply({
-                    content: '❌ I need `Send Messages`, `Embed Links`, and `Manage Messages` permissions in this channel!',
+                    content: '❌ Trebaju mi `Send Messages`, `Embed Links`, i `Manage Messages` dozvole u ovom kanalu!',
                     ephemeral: true
                 });
             }
@@ -64,7 +63,7 @@ module.exports = {
             
             if (!embedMessage) {
                 return interaction.editReply({
-                    content: '❌ Failed to create central embed!',
+                    content: '❌ Neuspešno kreiranje centralnog embeda!',
                     ephemeral: true
                 });
             }
@@ -87,50 +86,50 @@ module.exports = {
             });
 
             const successEmbed = new EmbedBuilder()
-                .setTitle('✅ Central Music System Setup Complete!')
-                .setDescription(`Central music control has been setup in <#${channelId}>`)
+                .setTitle('✅ Centralni Muzički Sistem Podešen!')
+                .setDescription(`Centralna kontrola muzike je podešena u <#${channelId}>`)
                 .addFields(
-                    { name: '📍 Channel', value: `<#${channelId}>`, inline: true },
-                    { name: '🔊 Voice Channel', value: voiceChannel ? `<#${voiceChannel.id}>` : 'Not set', inline: true },
-                    { name: '👥 Allowed Role', value: allowedRole ? `<@&${allowedRole.id}>` : 'Everyone', inline: true }
+                    { name: '📍 Kanal', value: `<#${channelId}>`, inline: true },
+                    { name: '🔊 Glasovni Kanal', value: voiceChannel ? `<#${voiceChannel.id}>` : 'Nije podešen', inline: true },
+                    { name: '👥 Dozvoljena Rola', value: allowedRole ? `<@&${allowedRole.id}>` : 'Svi', inline: true }
                 )
                 .setColor(0x00FF00)
-                .setFooter({ text: 'Users can now type song names in the channel to play music!' });
+                .setFooter({ text: 'Korisnici sada mogu kucati nazive pesama u kanalu da puštaju muziku!' });
 
             await interaction.editReply({ embeds: [successEmbed] });
 
             setTimeout(async () => {
                 try {
                     const usageEmbed = new EmbedBuilder()
-                        .setTitle('🎵 Central Music System Active!')
+                        .setTitle('🎵 Centralni Muzički Sistem Aktivan!')
                         .setDescription(
-                            '• Type any **song name** to play music\n' +
-                            '• Links (YouTube, Spotify) are supported\n' +
-                            '• Other messages will be auto-deleted\n' +
-                            '• Use normal commands (`!play`, `/play`) in other channels\n\n' +
-                            '⚠️ This message will be automatically deleted in 10 seconds!'
+                            '• Kucajte bilo koji **naziv pesme** za puštanje muzike\n' +
+                            '• Linkovi (YouTube, Spotify) su podržani\n' +
+                            '• Ostale poruke će biti automatski obrisane\n' +
+                            '• Koristite normalne komande (`!play`, `/play`) u drugim kanalima\n\n' +
+                            '⚠️ Ova poruka će biti automatski obrisana za 10 sekundi!'
                         )
                         .setColor(0x1DB954)
-                        .setFooter({ text: 'Enjoy your music!' });
+                        .setFooter({ text: 'Uživajte u muzici!' });
             
                     const msg = await channel.send({ embeds: [usageEmbed] });
             
-                    // Delete after 10 seconds
+                    // Obriši nakon 10 sekundi
                     setTimeout(() => {
                         msg.delete().catch(() => {});
                     }, 10000);
             
                 } catch (error) {
-                    console.error('Error sending usage instructions:', error);
+                    console.error('Greška pri slanju uputstava za korišćenje:', error);
                 }
             }, 2000);
             
 
         } catch (error) {
-            console.error('Error setting up central system:', error);
+            console.error('Greška pri podešavanju centralnog sistema:', error);
             
             await interaction.editReply({
-                content: '❌ An error occurred while setting up the central music system!',
+                content: '❌ Došlo je do greške pri podešavanju centralnog muzičkog sistema!',
                 ephemeral: true
             });
         }

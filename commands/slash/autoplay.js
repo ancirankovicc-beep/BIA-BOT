@@ -1,16 +1,15 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const Server = require('../../models/Server');
 const shiva = require('../../shiva');
-
 const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('autoplay')
-        .setDescription('Toggle autoplay mode')
+        .setDescription('Uključi/isključi autoplay mod')
         .addBooleanOption(option =>
             option.setName('enabled')
-                .setDescription('Enable or disable autoplay')
+                .setDescription('Uključi ili isključi autoplay')
                 .setRequired(true)
         ),
     securityToken: COMMAND_SECURITY_TOKEN,
@@ -18,7 +17,7 @@ module.exports = {
     async execute(interaction, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return interaction.reply({ embeds: [embed], ephemeral: true }).catch(() => {});
         }
@@ -40,7 +39,7 @@ module.exports = {
 
             const canUse = await checker.canUseMusic(interaction.guild.id, interaction.user.id);
             if (!canUse) {
-                const embed = new EmbedBuilder().setDescription('❌ You need DJ permissions to change autoplay settings!');
+                const embed = new EmbedBuilder().setDescription('❌ Trebaju vam DJ dozvole da promenite autoplay podešavanja!');
                 return interaction.editReply({ embeds: [embed] })
                     .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
             }
@@ -56,13 +55,13 @@ module.exports = {
                 player.setAutoplay = enabled;
             }
 
-            const embed = new EmbedBuilder().setDescription(`🎲 Autoplay **${enabled ? 'enabled' : 'disabled'}**`);
+            const embed = new EmbedBuilder().setDescription(`🎲 Autoplay **${enabled ? 'uključen' : 'isključen'}**`);
             return interaction.editReply({ embeds: [embed] })
                 .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
 
         } catch (error) {
             console.error('Autoplay command error:', error);
-            const embed = new EmbedBuilder().setDescription('❌ An error occurred while toggling autoplay!');
+            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške pri promeni autoplay-a!');
             return interaction.editReply({ embeds: [embed] })
                 .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
         }

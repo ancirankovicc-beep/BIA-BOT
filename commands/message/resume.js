@@ -1,18 +1,17 @@
 const { EmbedBuilder } = require('discord.js');
 const shiva = require('../../shiva');
-
 const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 
 module.exports = {
     name: 'resume',
     aliases: ['continue', 'unpause', 'start'],
-    description: 'Resume the paused music',
+    description: 'Nastavi pauziranu muziku',
     securityToken: COMMAND_SECURITY_TOKEN,
     
     async execute(message, args, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return message.reply({ embeds: [embed] }).catch(() => {});
         }
@@ -35,13 +34,13 @@ module.exports = {
             );
 
             if (!conditions.hasActivePlayer) {
-                const embed = new EmbedBuilder().setDescription('❌ No music is currently playing!');
+                const embed = new EmbedBuilder().setDescription('❌ Trenutno se ništa ne pušta!');
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             }
 
             if (!conditions.isPaused) {
-                const embed = new EmbedBuilder().setDescription('❌ Music is not paused!');
+                const embed = new EmbedBuilder().setDescription('❌ Muzika nije pauzirana!');
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             }
@@ -49,13 +48,13 @@ module.exports = {
             const player = conditions.player;
             player.pause(false);
 
-            const embed = new EmbedBuilder().setDescription('▶️ Music resumed!');
+            const embed = new EmbedBuilder().setDescription('▶️ Muzika nastavljena!');
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
 
         } catch (error) {
             console.error('Resume command error:', error);
-            const embed = new EmbedBuilder().setDescription('❌ An error occurred while resuming music!');
+            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške pri nastavljanju muzike!');
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
         }

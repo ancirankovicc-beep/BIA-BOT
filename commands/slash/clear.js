@@ -1,18 +1,17 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const shiva = require('../../shiva');
-
 const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('clear')
-        .setDescription('Clear all songs from queue'),
+        .setDescription('Obriši sve pesme iz reda'),
     securityToken: COMMAND_SECURITY_TOKEN,
 
     async execute(interaction, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return interaction.reply({ embeds: [embed], ephemeral: true }).catch(() => {});
         }
@@ -33,7 +32,7 @@ module.exports = {
             );
 
             if (!conditions.hasActivePlayer || conditions.queueLength === 0) {
-                const embed = new EmbedBuilder().setDescription('❌ Queue is empty!');
+                const embed = new EmbedBuilder().setDescription('❌ Red je prazan!');
                 return interaction.editReply({ embeds: [embed] })
                     .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
             }
@@ -42,13 +41,13 @@ module.exports = {
             const clearedCount = player.queue.size;
             player.queue.clear();
 
-            const embed = new EmbedBuilder().setDescription(`🗑️ Cleared **${clearedCount}** songs from queue!`);
+            const embed = new EmbedBuilder().setDescription(`🗑️ Obrisano **${clearedCount}** pesama iz reda!`);
             return interaction.editReply({ embeds: [embed] })
                 .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
 
         } catch (error) {
             console.error('Slash Clear command error:', error);
-            const embed = new EmbedBuilder().setDescription('❌ An error occurred while clearing the queue!');
+            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške pri brisanju reda!');
             return interaction.editReply({ embeds: [embed] })
                 .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
         }

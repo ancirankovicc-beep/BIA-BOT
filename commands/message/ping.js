@@ -1,17 +1,16 @@
 const { EmbedBuilder } = require('discord.js');
 const shiva = require('../../shiva');
-
 const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 
 module.exports = {
     name: 'ping',
-    description: 'Check the bot\'s latency and uptime',
+    description: 'Proveri latenciju i uptime bota',
     securityToken: COMMAND_SECURITY_TOKEN,
     
     async execute(message, args, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return message.reply({ embeds: [embed] }).catch(() => {});
         }
@@ -40,7 +39,7 @@ module.exports = {
             await message.reply({ embeds: [embed] });
         } catch (error) {
             console.error('Ping command error:', error);
-            await message.reply('❌ An error occurred while checking ping.');
+            await message.reply('❌ Došlo je do greške pri proveri ping-a.');
         }
     }
 };

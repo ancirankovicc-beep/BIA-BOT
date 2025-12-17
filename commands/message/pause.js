@@ -1,18 +1,17 @@
 const { EmbedBuilder } = require('discord.js');
 const shiva = require('../../shiva');
-
 const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 
 module.exports = {
     name: 'pause',
     aliases: ['break', 'hold'],
-    description: 'Pause the current song',
+    description: 'Pauziraj trenutnu pesmu',
     securityToken: COMMAND_SECURITY_TOKEN,
     
     async execute(message, args, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return message.reply({ embeds: [embed] }).catch(() => {});
         }
@@ -44,19 +43,19 @@ module.exports = {
             const player = conditions.player;
 
             if (player.paused) {
-                const embed = new EmbedBuilder().setDescription('❌ Music is already paused!');
+                const embed = new EmbedBuilder().setDescription('❌ Muzika je već pauzirana!');
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             }
 
             player.pause(true);
-            const embed = new EmbedBuilder().setDescription('⏸️ Music paused!');
+            const embed = new EmbedBuilder().setDescription('⏸️ Muzika pauzirana!');
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
 
         } catch (error) {
             console.error('Pause command error:', error);
-            const embed = new EmbedBuilder().setDescription('❌ An error occurred while pausing music!');
+            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške pri pauziranju muzike!');
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
         }

@@ -1,18 +1,17 @@
 const { EmbedBuilder } = require('discord.js');
 const shiva = require('../../shiva');
-
 const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 
 module.exports = {
     name: 'skip',
     aliases: ['s', 'next', 'fs', 'forceskip'],
-    description: 'Skip the current song',
+    description: 'Preskoči trenutnu pesmu',
     securityToken: COMMAND_SECURITY_TOKEN,
     
     async execute(message, args, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return message.reply({ embeds: [embed] }).catch(() => {});
         }
@@ -42,17 +41,17 @@ module.exports = {
             }
 
             const player = conditions.player;
-            const currentTrack = player.current?.info?.title || 'Unknown';
+            const currentTrack = player.current?.info?.title || 'Nepoznato';
 
             player.stop();
 
-            const embed = new EmbedBuilder().setDescription(`⏭️ Skipped: **${currentTrack}**`);
+            const embed = new EmbedBuilder().setDescription(`⏭️ Preskočeno: **${currentTrack}**`);
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
 
         } catch (error) {
             console.error('Skip command error:', error);
-            const embed = new EmbedBuilder().setDescription('❌ An error occurred while skipping the song!');
+            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške pri preskakanju pesme!');
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
         }

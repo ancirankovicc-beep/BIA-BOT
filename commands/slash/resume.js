@@ -1,18 +1,17 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const shiva = require('../../shiva');
-
 const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('resume')
-        .setDescription('Resume the paused music'),
+        .setDescription('Nastavi pauziranu muziku'),
     securityToken: COMMAND_SECURITY_TOKEN,
 
     async execute(interaction, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return interaction.reply({ embeds: [embed], ephemeral: true }).catch(() => {});
         }
@@ -33,13 +32,13 @@ module.exports = {
             );
 
             if (!conditions.hasActivePlayer) {
-                const embed = new EmbedBuilder().setDescription('❌ No music is currently playing!');
+                const embed = new EmbedBuilder().setDescription('❌ Trenutno se ništa ne pušta!');
                 return interaction.editReply({ embeds: [embed] })
                     .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
             }
 
             if (!conditions.isPaused) {
-                const embed = new EmbedBuilder().setDescription('❌ Music is not paused!');
+                const embed = new EmbedBuilder().setDescription('❌ Muzika nije pauzirana!');
                 return interaction.editReply({ embeds: [embed] })
                     .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
             }
@@ -47,13 +46,13 @@ module.exports = {
             const player = conditions.player;
             player.pause(false);
 
-            const embed = new EmbedBuilder().setDescription('▶️ Music resumed!');
+            const embed = new EmbedBuilder().setDescription('▶️ Muzika nastavljena!');
             return interaction.editReply({ embeds: [embed] })
                 .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
                 
         } catch (error) {
             console.error('Resume command error:', error);
-            const embed = new EmbedBuilder().setDescription('❌ An error occurred while resuming music!');
+            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške pri nastavljanju muzike!');
             return interaction.editReply({ embeds: [embed] })
                 .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
         }

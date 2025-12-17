@@ -2,20 +2,19 @@ const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const GarbageCollector = require('../../utils/garbageCollector');
 const config = require('../../config');
 const shiva = require('../../shiva');
-
 const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('clean-up')
-        .setDescription('Force garbage collection (owner only)')
+        .setDescription('Forsiraj garbage collection (samo vlasnici)')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     securityToken: COMMAND_SECURITY_TOKEN,
 
     async execute(interaction, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             return interaction.reply({
-                content: '❌ System core offline - Command unavailable',
+                content: '❌ Sistemsko jezgro je offline - Komanda nedostupna',
                 ephemeral: true
             }).catch(() => {});
         }
@@ -25,7 +24,7 @@ module.exports = {
 
         if (!config.bot.ownerIds.includes(interaction.user.id)) {
             return interaction.reply({
-                content: '❌ Only bot owners can use this command!',
+                content: '❌ Samo vlasnici bota mogu koristiti ovu komandu!',
                 ephemeral: true
             });
         }
@@ -35,7 +34,7 @@ module.exports = {
         const after = Math.round(process.memoryUsage().heapUsed / 1024 / 1024);
 
         await interaction.reply({
-            content: `🗑️ Cleanup completed!\nMemory: ${before}MB → ${after}MB`,
+            content: `🗑️ Čišćenje završeno!\nMemorija: ${before}MB → ${after}MB`,
             ephemeral: true
         });
     }

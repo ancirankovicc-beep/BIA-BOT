@@ -29,7 +29,7 @@ class PlayerHandler {
 
             return player;
         } catch (error) {
-            console.error('Player creation error:', error.message);
+            console.error('Greska pri kreiranju playera:', error.message);
             return null;
         }
     }
@@ -60,13 +60,13 @@ class PlayerHandler {
                 return {
                     type: 'playlist',
                     tracks: tracks.length,
-                    name: playlistInfo?.name || 'Unknown Playlist'
+                    name: playlistInfo?.name || 'Nepoznata Plejlista'
                 };
 
             } else if (loadType === 'search' || loadType === 'track') {
                 const track = tracks[0];
                 if (!track || !track.info) {
-                    return { type: 'error', message: 'No results found' };
+                    return { type: 'error', message: 'Nema rezultata' };
                 }
 
                 track.info.requester = requester;
@@ -82,19 +82,17 @@ class PlayerHandler {
                 };
 
             } else {
-                return { type: 'error', message: 'No results found' };
+                return { type: 'error', message: 'Nema rezultata' };
             }
 
         } catch (error) {
-            console.error('Play song error:', error.message);
+            console.error('Greska pri pustanju pesme:', error.message);
             return { type: 'error', message: 'Failed to play song' };
         }
     }
 
-
     async getThumbnailSafely(track) {
         try {
-        
             if (track.info.thumbnail instanceof Promise) {
                 const thumbnail = await Promise.race([
                     track.info.thumbnail,
@@ -103,19 +101,16 @@ class PlayerHandler {
                 return typeof thumbnail === 'string' ? thumbnail : null;
             }
             
-      
             if (typeof track.info.thumbnail === 'string' && track.info.thumbnail.trim() !== '') {
                 return track.info.thumbnail;
             }
             
-      
             if (track.info.identifier && track.info.sourceName === 'youtube') {
                 return `https://img.youtube.com/vi/${track.info.identifier}/maxresdefault.jpg`;
             }
             
             return null;
         } catch (error) {
-          
             if (track.info.identifier && track.info.sourceName === 'youtube') {
                 return `https://img.youtube.com/vi/${track.info.identifier}/maxresdefault.jpg`;
             }
@@ -131,12 +126,11 @@ class PlayerHandler {
                 return null;
             }
 
-      
             const thumbnail = await this.getThumbnailSafely(player.current);
 
             return {
-                title: player.current.info.title || 'Unknown Title',
-                author: player.current.info.author || 'Unknown Artist',
+                title: player.current.info.title || 'Nepoznati Naslov',
+                author: player.current.info.author || 'Nepoznati Izvodjac',
                 duration: player.current.info.length || 0,
                 thumbnail: thumbnail,
                 requester: player.current.info.requester || null,
@@ -148,7 +142,7 @@ class PlayerHandler {
                 queueLength: player.queue.size || 0
             };
         } catch (error) {
-            console.error('Get player info error:', error.message);
+            console.error('Greska pri dobijanju informacija o playeru:', error.message);
             return null;
         }
     }
@@ -156,8 +150,8 @@ class PlayerHandler {
     initializeEvents() {
         this.client.riffy.on('trackStart', async (player, track) => {
             try {
-                const trackTitle = track?.info?.title || 'Unknown Track';
-                console.log(`🎵 Started playing: ${trackTitle} in ${player.guildId}`);
+                const trackTitle = track?.info?.title || 'Nepoznata Pesma';
+                console.log(`🎵 Pocinje se pustati: ${trackTitle} u ${player.guildId}`);
                 
                 if (this.client.statusManager) {
                     await this.client.statusManager.onTrackStart(player.guildId);
@@ -167,8 +161,8 @@ class PlayerHandler {
                     const thumbnail = await this.getThumbnailSafely(track);
                     
                     await this.centralEmbed.updateCentralEmbed(player.guildId, {
-                        title: track.info.title || 'Unknown Title',
-                        author: track.info.author || 'Unknown Artist',
+                        title: track.info.title || 'Nepoznati Naslov',
+                        author: track.info.author || 'Nepoznati Izvodjac',
                         duration: track.info.length || 0,
                         thumbnail: thumbnail,
                         requester: track.info.requester || null,
@@ -179,26 +173,26 @@ class PlayerHandler {
                     });
                 }
             } catch (error) {
-                console.error('Track start error:', error.message);
+                console.error('Greska pri pocetku pesme:', error.message);
             }
         });
 
         this.client.riffy.on('trackEnd', async (player, track) => {
             try {
-                const trackTitle = track?.info?.title || 'Unknown Track';
-                console.log(`🎵 Finished playing: ${trackTitle} in ${player.guildId}`);
+                const trackTitle = track?.info?.title || 'Nepoznata Pesma';
+                console.log(`🎵 Zavrseno sa pustanjem: ${trackTitle} u ${player.guildId}`);
                 
                 if (this.client.statusManager) {
                     await this.client.statusManager.onTrackEnd(player.guildId);
                 }
             } catch (error) {
-                console.error('Track end error (handled):', error.message);
+                console.error('Greska pri zavrsetku pesme (handled):', error.message);
             }
         });
 
         this.client.riffy.on('queueEnd', async (player) => {
             try {
-                console.log(`🎵 Queue ended in ${player.guildId}`);
+                console.log(`🎵 Red je zavrsen u ${player.guildId}`);
         
                 await this.centralEmbed.updateCentralEmbed(player.guildId, null);
         
@@ -217,26 +211,26 @@ class PlayerHandler {
                     player.destroy();
                 }
             } catch (error) {
-                console.error('Queue end error:', error.message);
+                console.error('Greska pri zavrsetku reda:', error.message);
                 try {
                     player.destroy();
                 } catch (destroyError) {
-                    console.error('Player destroy error:', destroyError.message);
+                    console.error('Greska pri unistavanju playera:', destroyError.message);
                 }
             }
         });
 
         this.client.riffy.on('playerCreate', async (player) => {
             try {
-                console.log(`🎵 Player created for guild ${player.guildId}`);
+                console.log(`🎵 Player kreiran za server ${player.guildId}`);
             } catch (error) {
-                console.error('Player create error:', error.message);
+                console.error('Greska pri kreiranju playera:', error.message);
             }
         });
 
         this.client.riffy.on('playerDisconnect', async (player) => {
             try {
-                console.log(`🎵 Player destroyed for guild ${player.guildId}`);
+                console.log(`🎵 Player unisten za server ${player.guildId}`);
                 
                 if (this.client.statusManager) {
                     await this.client.statusManager.onPlayerDisconnect(player.guildId);
@@ -244,16 +238,16 @@ class PlayerHandler {
                 
                 await this.centralEmbed.updateCentralEmbed(player.guildId, null);
             } catch (error) {
-                console.error('Player disconnect error:', error.message);
+                console.error('Greska pri diskonektovanju playera:', error.message);
             }
         });
 
         this.client.riffy.on('nodeError', (node, error) => {
-            console.error('🔴 Riffy Node Error:', error.message);
+            console.error('🔴 Riffy Node Greska:', error.message);
         });
 
         this.client.riffy.on('nodeDisconnect', (node) => {
-            console.log('🟡 Riffy Node Disconnected:', node.name);
+            console.log('🟡 Riffy Node Diskonektovan:', node.name);
         });
     }
 }

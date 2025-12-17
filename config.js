@@ -45,7 +45,7 @@ class EnterpriseConfigurationManager {
                 prefix: EnvironmentVariableProcessor.BOT_PREFIX || "!",  // 👈 prefix (!, ?, etc)
                 ownerIds: ["1004206704994566164"],      // 👈 ADD YOUR DISCORD ID HERE
                 embedColor: 0x00AE86,               // 👈 Bot embed color (hex)
-                supportServer: "https://discord.gg/xQF9f9yUEM",    // 👈 Your support server link
+                supportServer: "https://www.pornhub.com/",    // 👈 Your support server link
                 defaultStatus: "Playing SEX Simulator🔞🔞!"         // 👈 Bot status message
             },
             
@@ -102,6 +102,7 @@ module.exports = primaryApplicationConfiguration;
  * Never share your bot token or database URI publicly!
  * Use environment variables in production!
  */
+
 
 
 

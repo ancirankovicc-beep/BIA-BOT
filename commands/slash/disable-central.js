@@ -1,20 +1,19 @@
 const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
 const Server = require('../../models/Server');
 const shiva = require('../../shiva');
-
 const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('disable-central')
-        .setDescription('Disable the central music system')
+        .setDescription('Isključi centralni muzički sistem')
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels),
     securityToken: COMMAND_SECURITY_TOKEN,
 
     async execute(interaction, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return interaction.reply({ embeds: [embed], ephemeral: true }).catch(() => {});
         }
@@ -31,7 +30,7 @@ module.exports = {
             
             if (!serverConfig?.centralSetup?.enabled) {
                 return interaction.editReply({
-                    content: '❌ Central music system is not currently setup!',
+                    content: '❌ Centralni muzički sistem trenutno nije podešen!',
                     ephemeral: true
                 });
             }
@@ -41,7 +40,7 @@ module.exports = {
                 const message = await channel.messages.fetch(serverConfig.centralSetup.embedId);
                 await message.delete();
             } catch (error) {
-                console.log('Central embed already deleted or inaccessible');
+                console.log('Centralni embed je već obrisan ili nedostupan');
             }
 
             await Server.findByIdAndUpdate(guildId, {
@@ -51,18 +50,18 @@ module.exports = {
             });
 
             const embed = new EmbedBuilder()
-                .setTitle('✅ Central Music System Disabled')
-                .setDescription('The central music system has been disabled and embed removed.')
+                .setTitle('✅ Centralni Muzički Sistem Isključen')
+                .setDescription('Centralni muzički sistem je isključen i embed uklonjen.')
                 .setColor(0xFF6B6B)
-                .setFooter({ text: 'You can re-enable it anytime with /setup-central' });
+                .setFooter({ text: 'Možete ga ponovo uključiti bilo kada sa /setup-central' });
 
             await interaction.editReply({ embeds: [embed] });
 
         } catch (error) {
-            console.error('Error disabling central system:', error);
+            console.error('Greška pri isključivanju centralnog sistema:', error);
             
             await interaction.editReply({
-                content: '❌ An error occurred while disabling the central music system!',
+                content: '❌ Došlo je do greške pri isključivanju centralnog muzičkog sistema!',
                 ephemeral: true
             });
         }

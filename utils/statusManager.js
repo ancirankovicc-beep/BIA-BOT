@@ -243,7 +243,7 @@ class StatusManager {
         this.stopCurrentStatus();
         this.isPlaying = false;
         
-        const defaultActivity = `🎵 Spreman za muziku!`;
+        const defaultActivity = `🎵 Spremna za tebe bebo!`;
         
         await this.client.user.setPresence({
             activities: [{
@@ -327,3 +327,4 @@ class StatusManager {
 }
 
 module.exports = StatusManager;
+

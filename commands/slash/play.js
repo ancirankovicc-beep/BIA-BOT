@@ -1,15 +1,14 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const shiva = require('../../shiva');
-
 const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('play')
-        .setDescription('Play a song or add to queue')
+        .setDescription('Pusti pesmu ili dodaj u red')
         .addStringOption(option =>
             option.setName('query')
-                .setDescription('Song name, URL, or search query')
+                .setDescription('Naziv pesme, URL, ili pretraga')
                 .setRequired(true)
         ),
     securityToken: COMMAND_SECURITY_TOKEN,
@@ -17,7 +16,7 @@ module.exports = {
     async execute(interaction, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return interaction.reply({ embeds: [embed], ephemeral: true }).catch(() => {});
         }
@@ -58,15 +57,15 @@ module.exports = {
             const result = await playerHandler.playSong(player, query, interaction.user);
 
             if (result.type === 'track') {
-                const embed = new EmbedBuilder().setDescription(`✅ Added to queue: **${result.track.info.title}**`);
+                const embed = new EmbedBuilder().setDescription(`✅ Dodato u red: **${result.track.info.title}**`);
                 return interaction.editReply({ embeds: [embed] })
                     .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
             } else if (result.type === 'playlist') {
-                const embed = new EmbedBuilder().setDescription(`✅ Added **${result.tracks}** songs from playlist: **${result.name}**`);
+                const embed = new EmbedBuilder().setDescription(`✅ Dodato **${result.tracks}** pesama iz playliste: **${result.name}**`);
                 return interaction.editReply({ embeds: [embed] })
                     .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
             } else {
-                const embed = new EmbedBuilder().setDescription('❌ No results found for your query!');
+                const embed = new EmbedBuilder().setDescription('❌ Nema rezultata za vaš upit!');
                 return interaction.editReply({ embeds: [embed] })
                     .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
             }
@@ -74,7 +73,7 @@ module.exports = {
         } catch (error) {
             console.error('Play slash command error:', error);
             ErrorHandler.handle(error, 'play slash command');
-            const embed = new EmbedBuilder().setDescription('❌ An error occurred while trying to play music!');
+            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške pri pokušaju puštanja muzike!');
             return interaction.editReply({ embeds: [embed] })
                 .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
         }

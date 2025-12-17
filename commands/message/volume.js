@@ -1,18 +1,17 @@
 const { EmbedBuilder } = require('discord.js');
 const shiva = require('../../shiva');
-
 const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 
 module.exports = {
     name: 'volume',
     aliases: ['vol', 'v'],
-    description: 'Set the music volume (1-100)',
+    description: 'Podesi jačinu zvuka (1-100)',
     securityToken: COMMAND_SECURITY_TOKEN,
     
     async execute(message, args, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return message.reply({ embeds: [embed] }).catch(() => {});
         }
@@ -27,7 +26,7 @@ module.exports = {
         const volume = parseInt(args[0]);
         
         if (!volume || volume < 1 || volume > 100) {
-            const embed = new EmbedBuilder().setDescription('❌ Please provide a valid volume level (1-100)! Example: `!volume 50`');
+            const embed = new EmbedBuilder().setDescription('❌ Molimo unesite validan nivo zvuka (1-100)! Primer: `!volume 50`');
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
         }
@@ -43,13 +42,13 @@ module.exports = {
             );
 
             if (!conditions.hasActivePlayer) {
-                const embed = new EmbedBuilder().setDescription('❌ No music is currently playing!');
+                const embed = new EmbedBuilder().setDescription('❌ Trenutno se ništa ne pušta!');
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             }
 
             if (!conditions.sameVoiceChannel) {
-                const embed = new EmbedBuilder().setDescription('❌ You need to be in the same voice channel as the bot!');
+                const embed = new EmbedBuilder().setDescription('❌ Morate biti u istom glasovnom kanalu kao i bot!');
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             }
@@ -57,13 +56,13 @@ module.exports = {
             const player = conditions.player;
             player.setVolume(volume);
 
-            const embed = new EmbedBuilder().setDescription(`🔊 Volume set to **${volume}%**`);
+            const embed = new EmbedBuilder().setDescription(`🔊 Jačina zvuka podešena na **${volume}%**`);
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
 
         } catch (error) {
             console.error('Volume command error:', error);
-            const embed = new EmbedBuilder().setDescription('❌ An error occurred while setting volume!');
+            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške pri podešavanju jačine zvuka!');
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
         }

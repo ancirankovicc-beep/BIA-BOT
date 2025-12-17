@@ -1,15 +1,14 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const shiva = require('../../shiva');
-
 const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('queue')
-        .setDescription('Show the music queue')
+        .setDescription('Prikaži red pesama')
         .addIntegerOption(option =>
             option.setName('page')
-                .setDescription('Queue page number')
+                .setDescription('Broj stranice reda')
                 .setMinValue(1)
                 .setRequired(false)
         ),
@@ -18,7 +17,7 @@ module.exports = {
     async execute(interaction, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return interaction.reply({ embeds: [embed], ephemeral: true }).catch(() => {});
         }
@@ -39,7 +38,7 @@ module.exports = {
             );
 
             if (!conditions.hasActivePlayer) {
-                const embed = new EmbedBuilder().setDescription('❌ No music is currently playing!');
+                const embed = new EmbedBuilder().setDescription('❌ Trenutno se ništa ne pušta!');
                 return interaction.editReply({ embeds: [embed] })
                     .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
             }
@@ -49,7 +48,7 @@ module.exports = {
             const currentTrack = player.current;
 
             if (!currentTrack && queue.size === 0) {
-                const embed = new EmbedBuilder().setDescription('📜 Queue is empty!');
+                const embed = new EmbedBuilder().setDescription('📜 Red je prazan!');
                 return interaction.editReply({ embeds: [embed] })
                     .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
             }
@@ -64,24 +63,24 @@ module.exports = {
 
             if (currentTrack) {
                 const duration = formatDuration(currentTrack.info.length);
-                description += `🎵 **Now Playing**\n**${currentTrack.info.title}**\nBy: ${currentTrack.info.author}\nDuration: ${duration}\nRequested by: <@${currentTrack.info.requester.id}>\n\n`;
+                description += `🎵 **Sada se pušta**\n**${currentTrack.info.title}**\nAutor: ${currentTrack.info.author}\nTrajanje: ${duration}\nZahtevao: <@${currentTrack.info.requester.id}>\n\n`;
             }
 
             if (queue.size > 0) {
                 const queueTracks = Array.from(queue).slice(startIndex, endIndex);
                 if (queueTracks.length > 0) {
-                    description += `📋 **Up Next (${queue.size} songs)**\n`;
+                    description += `📋 **Sledeće (${queue.size} pesama)**\n`;
                     description += queueTracks.map((track, index) => {
                         const position = startIndex + index + 1;
                         const duration = formatDuration(track.info.length);
-                        return `\`${position}.\` **${track.info.title}** \`[${duration}]\`\nRequested by: <@${track.info.requester.id}>`;
+                        return `\`${position}.\` **${track.info.title}** \`[${duration}]\`\nZahtevao: <@${track.info.requester.id}>`;
                     }).join('\n\n');
                 }
 
                 if (totalPages > 1) {
-                    description += `\n\nPage ${page}/${totalPages}`;
+                    description += `\n\nStrana ${page}/${totalPages}`;
                 } else {
-                    description += `\n\nTotal: ${queue.size} songs in queue`;
+                    description += `\n\nUkupno: ${queue.size} pesama u redu`;
                 }
             }
 
@@ -91,7 +90,7 @@ module.exports = {
 
         } catch (error) {
             console.error('Queue command error:', error);
-            const embed = new EmbedBuilder().setDescription('❌ An error occurred while fetching the queue!');
+            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške pri preuzimanju reda!');
             return interaction.editReply({ embeds: [embed] })
                 .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
         }

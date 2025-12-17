@@ -193,7 +193,7 @@ class CentralEmbedHandler {
                     ].join('\n'))
                     .setColor(embedColor)
                     .setFooter({ 
-                        text: `Ultimate Music Bot • ${statusText} • Developed By GlaceYT`,
+                        text: `Music Bot • ${statusText} • Developed By Zivojinovic`,
                         iconURL: this.client.user.displayAvatarURL()
                     })
                     .setTimestamp();
@@ -210,7 +210,7 @@ class CentralEmbedHandler {
                 components = this.createAdvancedControlButtons(trackInfo);
             } else {
                 embed = new EmbedBuilder()
-                .setAuthor({ name: 'Ultimate Muzički Kontrolni Centar', iconURL: 'https://cdn.discordapp.com/emojis/896724352949706762.gif', url: 'https://discord.gg/xQF9f9yUEM' })
+                .setAuthor({ name: 'Muzički Kontrolni Centar', iconURL: 'https://cdn.discordapp.com/emojis/896724352949706762.gif', url: 'https://discord.gg/xQF9f9yUEM' })
                 .setDescription([
                     '',
                     '- Jednostavno ukucajte **naziv pesme** ili **YouTube link** da započnete žurku!',
@@ -351,3 +351,4 @@ class CentralEmbedHandler {
 }
 
 module.exports = CentralEmbedHandler;
+

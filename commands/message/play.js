@@ -1,6 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
 const shiva = require('../../shiva');
-
 const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 
 module.exports = {
@@ -12,7 +11,7 @@ module.exports = {
     async execute(message, args, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ Sistem jezgra je van mreže – komanda nije dostupna')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return message.reply({ embeds: [embed] }).catch(() => {});
         }
@@ -30,7 +29,7 @@ module.exports = {
         
         const query = args.join(' ');
         if (!query) {
-            const embed = new EmbedBuilder().setDescription('❌ Moraš navesti pesmu koju želiš da pustiš!');
+            const embed = new EmbedBuilder().setDescription('❌ Molimo unesite pesmu za puštanje!');
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
         }
@@ -70,18 +69,18 @@ module.exports = {
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             } else if (result.type === 'playlist') {
-                const embed = new EmbedBuilder().setDescription(`✅ Dodato **${result.tracks}** pesama iz plejliste: **${result.name}**`);
+                const embed = new EmbedBuilder().setDescription(`✅ Dodato **${result.tracks}** pesama iz playliste: **${result.name}**`);
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             } else {
-                const embed = new EmbedBuilder().setDescription('❌ Nema rezultata za tvoj upit!');
+                const embed = new EmbedBuilder().setDescription('❌ Nema rezultata za vaš upit!');
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             }
 
         } catch (error) {
-            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške prilikom puštanja muzike!');
-            console.error('Greška u play komandi:', error);
+            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške pri pokušaju puštanja muzike!');
+            console.error('Play command error:', error);
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
         }

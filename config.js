@@ -29,11 +29,11 @@ class EnterpriseConfigurationManager {
              * 🎵 LAVALINK AUDIO SERVER CONFIGURATION
              * Configure your Lavalink server for audio processing
              */
-            lavalink: {
-  "identifier": "Harmonix V4 Public",
-  "password": "Kaun.Yuvraj",
-  "host": "pnode1.danbot.host",
-  "port": 1186,
+            {
+  "name": "prmgvyt",
+  "host": "217.160.125.127",
+  "port": 14845,
+  "password": "prmgvyt",
   "secure": false
 },           
             
@@ -102,6 +102,7 @@ module.exports = primaryApplicationConfiguration;
  * Never share your bot token or database URI publicly!
  * Use environment variables in production!
  */
+
 
 
 
